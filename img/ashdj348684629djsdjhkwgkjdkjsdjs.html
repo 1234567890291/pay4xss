@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>API Request Validator</title>
+  <title>Mock API</title>
 </head>
 <body>
 <script>
+  // Mock API Keys
   const apiKeys = [
-    { key: "AH3-SKL-333-LSK-GHK-600-2025", holder: "Muhammad Usama" , time :"3 Months" },
+  { key: "AH3-SKL-333-LSK-GHK-600-2025", holder: "Muhammad Usama" , time :"3 Months" },
     { key: "J3D-NPT-012-YUI-LXK-456-7890", holder: "Rehan Khan" , time :"3 Months" },
     { key: "QW5-MNB-444-GTK-XYZ-888-1234", holder: "Omar Hassan" },
     { key: "P1V-FGH-555-BVC-HGF-321-1235", holder: "Aisha Khan" },
@@ -30,43 +31,29 @@
     { key: "N5E-TKY-555-VLQ-SJP-234-5679", holder: "Hassan Nawaz" }
   ];
 
-  // Function to get URL parameters
-  function getUrlParameter(name) {
-    const params = new URLSearchParams(window.location.search);
-    return params.get(name);
-  }
+  const urlParams = new URLSearchParams(window.location.search);
+  const apiKeyFromUrl = urlParams.get("apikey");
 
-  // Check if an API key is provided via URL parameter
-  const apiKeyFromUrl = getUrlParameter("apikey"); // Check for 'apikey' in the URL
-  let response;
-
-  if (apiKeyFromUrl) {
-    // Validate the API key from URL and fetch the holder name
-    const apiKeyData = apiKeys.find(api => api.key === apiKeyFromUrl);
+  // Function to return JSON response
+  function getApiResponse(apiKey) {
+    const apiKeyData = apiKeys.find(api => api.key === apiKey);
     if (apiKeyData) {
-      response = {
+      return JSON.stringify({
         status: "success",
-        message: "API Key from URL is valid.",
+        message: "API Key is valid.",
         holder: apiKeyData.holder,
-        time : apiKeyData.time
-      };
+        time: apiKeyData.time
+      });
     } else {
-      response = {
+      return JSON.stringify({
         status: "error",
-        message: "API Key from URL is invalid."
-      };
+        message: "Invalid API Key."
+      });
     }
-  } else {
-    response = {
-      status: "error",
-      message: "No API Key provided in the URL."
-    };
   }
 
-  // Display the response in JSON format with proper indentation
-  const pre = document.createElement('pre');
-  pre.textContent = JSON.stringify(response, null, 2);
-  document.body.appendChild(pre);
+  // Respond with JSON
+  document.body.innerText = getApiResponse(apiKeyFromUrl);
 </script>
 </body>
 </html>
